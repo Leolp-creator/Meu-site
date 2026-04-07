@@ -3,106 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leitura com Delay</title>
+  <title>Controle de Sites</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #f5f5f5;
-    }
-    .container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 350px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #007bff;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-    button:disabled {
-      background: #aaa;
-    }
-    .loader {
-      margin: 20px 0;
-      font-size: 18px;
-      color: #555;
-    }
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
-      color: green;
-    }
-    iframe {
-      margin-top: 20px;
-      width: 100%;
-      height: 200px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
+    body { font-family: Arial; margin:0; background:#f5f5f5; }
+    .tabs { display:flex; background:#007bff; }
+    .tab { flex:1; padding:12px; color:white; text-align:center; cursor:pointer; }
+    .tab.active { background:#0056b3; }
+    .content { display:none; padding:15px; }
+    .content.active { display:block; }
+    input { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:1px solid #ccc; }
+    button { width:100%; padding:10px; border:none; border-radius:8px; background:#007bff; color:white; margin-bottom:10px; }
+    .viewer { height:70vh; overflow:auto; border-top:2px solid #ccc; }
+    iframe { width:100%; height:100%; border:none; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Leitura ao Vivo</h2>
 
-    <input type="text" id="urlInput" placeholder="Digite o link do site (https://...)" />
-    <button id="loadSiteBtn">Carregar Site</button>
+<div class="tabs">
+  <div class="tab active" onclick="openTab('busca')">Buscar Site</div>
+  <div class="tab" onclick="openTab('visualizar')">Visualizar</div>
+</div>
 
-    <button id="startBtn">Iniciar Leitura</button>
+<div id="busca" class="content active">
+  <h3>Buscar e acessar site</h3>
+  <input type="text" id="urlInput" placeholder="Digite o link (ex: example.com)">
+  <button onclick="carregarSite()">Acessar Site</button>
+</div>
 
-    <div class="loader" id="loader"></div>
-    <div class="result" id="result"></div>
-
+<div id="visualizar" class="content">
+  <h3>Visualização</h3>
+  <div class="viewer">
     <iframe id="siteFrame"></iframe>
   </div>
+</div>
 
-  <script>
-    const button = document.getElementById('startBtn');
-    const loader = document.getElementById('loader');
-    const result = document.getElementById('result');
-    const loadSiteBtn = document.getElementById('loadSiteBtn');
-    const urlInput = document.getElementById('urlInput');
-    const siteFrame = document.getElementById('siteFrame');
+<script>
+function openTab(tabId){
+  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
 
-    loadSiteBtn.addEventListener('click', () => {
-      let url = urlInput.value.trim();
-      if (!url.startsWith('http')) {
-        url = 'https://' + url;
-      }
-      siteFrame.src = url;
-    });
+function carregarSite(){
+  let url = document.getElementById('urlInput').value.trim();
+  if(!url.startsWith('http')) url = 'https://' + url;
+  document.getElementById('siteFrame').src = url;
 
-    button.addEventListener('click', () => {
-      result.textContent = '';
-      loader.textContent = 'Carregando leitura...';
-      button.disabled = true;
+  // muda automaticamente pra aba visualizar
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.querySelector('[onclick="openTab(\'visualizar\')"]').classList.add('active');
+  document.getElementById('visualizar').classList.add('active');
+}
+</script>
 
-      setTimeout(() => {
-        loader.textContent = '';
-        result.textContent = 'Resultado atualizado ao vivo!';
-        button.disabled = false;
-      }, 5000);
-    });
-  </script>
 </body>
 </html>
-
