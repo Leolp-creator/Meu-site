@@ -1,6 +1,7 @@
 # Meu-site
 Site
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -17,13 +18,14 @@ Site
     }
     .container {
       background: #fff;
-      padding: 30px;
+      padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       text-align: center;
-      width: 350px;
+      width: 95%;
+      max-width: 500px;
     }
-    input {
+    input, select {
       width: 100%;
       padding: 10px;
       margin-bottom: 10px;
@@ -39,42 +41,55 @@ Site
       font-size: 16px;
       cursor: pointer;
       margin-top: 5px;
-    }
-    button:disabled {
-      background: #aaa;
-    }
-    .loader {
-      margin: 20px 0;
-      font-size: 18px;
-      color: #555;
-    }
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
-      color: green;
-    }
-    iframe {
-      margin-top: 20px;
       width: 100%;
-      height: 200px;
+    }
+    .viewer {
+      margin-top: 15px;
+      overflow: hidden;
       border: 1px solid #ccc;
       border-radius: 8px;
+      height: 300px;
+      position: relative;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      transform-origin: 0 0;
+    }
+    .loader {
+      margin: 15px 0;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 10px;
+      font-weight: bold;
+      color: green;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Leitura ao Vivo</h2>
+    <h2>Leitura com Controle</h2>
 
-    <input type="text" id="urlInput" placeholder="Digite o link do site (https://...)" />
+    <input type="text" id="urlInput" placeholder="Digite o link do site" />
     <button id="loadSiteBtn">Carregar Site</button>
 
-    <button id="startBtn">Iniciar Leitura</button>
+    <select id="zoomControl">
+      <option value="1">Zoom 100%</option>
+      <option value="0.75">Zoom 75%</option>
+      <option value="0.5">Zoom 50%</option>
+      <option value="0.25">Zoom 25%</option>
+    </select>
+
+    <button id="startBtn">Iniciar Leitura (5s delay)</button>
 
     <div class="loader" id="loader"></div>
     <div class="result" id="result"></div>
 
-    <iframe id="siteFrame"></iframe>
+    <div class="viewer">
+      <iframe id="siteFrame"></iframe>
+    </div>
   </div>
 
   <script>
@@ -84,26 +99,6 @@ Site
     const loadSiteBtn = document.getElementById('loadSiteBtn');
     const urlInput = document.getElementById('urlInput');
     const siteFrame = document.getElementById('siteFrame');
+    const zoomControl = document.getElementById('zoomControl');
 
-    loadSiteBtn.addEventListener('click', () => {
-      let url = urlInput.value.trim();
-      if (!url.startsWith('http')) {
-        url = 'https://' + url;
-      }
-      siteFrame.src = url;
-    });
-
-    button.addEventListener('click', () => {
-      result.textContent = '';
-      loader.textContent = 'Carregando leitura...';
-      button.disabled = true;
-
-      setTimeout(() => {
-        loader.textContent = '';
-        result.textContent = 'Resultado atualizado ao vivo!';
-        button.disabled = false;
-      }, 5000);
-    });
-  </script>
-</body>
-</html>
+    loadSiteBtn.addEventListener(
